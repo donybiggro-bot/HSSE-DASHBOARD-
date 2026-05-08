@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard HSSE Bulanan — Pertamina Gas</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+  <div class="container">
+
+    <!-- TOP NAV -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="nav-logo">HSSE</div>
+        <div>
+          <div class="nav-title">Dashboard HSSE Bulanan</div>
+          <div class="nav-sub">Pertamina Gas — Sistem Pelaporan Terintegrasi</div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost" onclick="window.print()">🖨️ Cetak</button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-form-btn" onclick="showTab('form', this)">📝 Form Input</button>
+      <button class="tab-btn" id="tab-infografis-btn" onclick="showTab('infografis', this)">📊 Infografis</button>
+    </div>
+
+    <!-- FORM INPUT -->
+    <section class="section visible" id="section-form">
+      <div class="form-card">
+
+        <!-- Periode -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">📅</span> Periode Laporan
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group">
+              <label for="f-bulan">Bulan</label>
+              <select id="f-bulan">
+                <option>Januari</option><option>Februari</option><option>Maret</option>
+                <option selected>April</option><option>Mei</option><option>Juni</option>
+                <option>Juli</option><option>Agustus</option><option>September</option>
+                <option>Oktober</option><option>November</option><option>Desember</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="f-tahun">Tahun</label>
+              <input type="number" id="f-tahun" value="2025" min="2020" max="2040" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Jam Kerja -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">⏱️</span> Jam Kerja Selamat
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group"><label>Total Jam Kerja (jam)</label><input type="number" id="f-jam-kerja" placeholder="cth: 125000" min="0" oninput="calcLTIFR()" /></div>
+            <div class="form-group"><label>Jam Kerja Selamat (jam)</label><input type="number" id="f-jam-selamat" placeholder="cth: 124500" min="0" /></div>
+            <div class="form-group"><label>Jumlah Tenaga Kerja</label><input type="number" id="f-tenaga-kerja" placeholder="cth: 350" min="0" /></div>
+            <div class="form-group"><label>Man-hours Kumulatif YTD</label><input type="number" id="f-ytd" placeholder="cth: 480000" min="0" /></div>
+          </div>
+        </div>
+
+        <!-- Insiden -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">🚨</span> Laporan Insiden
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group"><label>Fatality (FAT)</label><input type="number" id="f-fat" value="0" min="0" /></div>
+            <div class="form-group"><label>Lost Time Injury (LTI)</label><input type="number" id="f-lti" value="0" min="0" oninput="calcLTIFR()" /></div>
+            <div class="form-group"><label>Restricted Work Case (RWC)</label><input type="number" id="f-rwc" value="0" min="0" /></div>
+            <div class="form-group"><label>Medical Treatment Case (MTC)</label><input type="number" id="f-mtc" value="0" min="0" /></div>
+            <div class="form-group"><label>First Aid Case (FAC)</label><input type="number" id="f-fac" value="0" min="0" /></div>
+            <div class="form-group"><label>Near Miss (NM)</label><input type="number" id="f-nm" value="0" min="0" /></div>
+            <div class="form-group"><label>Property Damage (PD)</label><input type="number" id="f-pd" value="0" min="0" /></div>
+            <div class="form-group"><label>LTIFR (otomatis)</label><input type="text" id="f-ltifr-show" readonly placeholder="—" class="readonly" /></div>
+          </div>
+        </div>
+
+        <!-- PEKA -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">👁️</span> Laporan PEKA
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group"><label>Target Observasi PEKA</label><input type="number" id="f-peka-target" placeholder="cth: 200" min="0" /></div>
+            <div class="form-group"><label>Realisasi Observasi PEKA</label><input type="number" id="f-peka-real" placeholder="cth: 185" min="0" /></div>
+            <div class="form-group"><label>Safe Behavior (%)</label><input type="number" id="f-peka-safe" placeholder="cth: 92" min="0" max="100" /></div>
+            <div class="form-group"><label>At-Risk Behavior (%)</label><input type="number" id="f-peka-risk" placeholder="cth: 8" min="0" max="100" /></div>
+          </div>
+        </div>
+
+        <!-- Lingkungan -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">🌿</span> Laporan Lingkungan
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group"><label>Limbah B3 Dihasilkan (kg)</label><input type="number" id="f-b3" placeholder="cth: 450" min="0" /></div>
+            <div class="form-group"><label>Limbah B3 Terkelola (kg)</label><input type="number" id="f-b3-kelola" placeholder="cth: 450" min="0" /></div>
+            <div class="form-group"><label>Konsumsi Air (m³)</label><input type="number" id="f-air" placeholder="cth: 1200" min="0" /></div>
+            <div class="form-group"><label>Emisi GRK (ton CO₂e)</label><input type="number" id="f-grk" placeholder="cth: 85" min="0" /></div>
+            <div class="form-group"><label>Tumpahan Minyak (kl)</label><input type="number" id="f-tumpahan" value="0" min="0" /></div>
+            <div class="form-group"><label>Jumlah Temuan Lingkungan</label><input type="number" id="f-temuan-ling" value="0" min="0" /></div>
+          </div>
+        </div>
+
+        <!-- Safety Program -->
+        <div class="form-block">
+          <div class="form-block-title">
+            <span class="form-block-icon">🦺</span> Laporan Safety Program
+          </div>
+          <div class="form-grid col2">
+            <div class="form-group"><label>Safety Talk (sesi)</label><input type="number" id="f-safety-talk" placeholder="cth: 12" min="0" /></div>
+            <div class="form-group"><label>Safety Inspection (kali)</label><input type="number" id="f-safety-insp" placeholder="cth: 8" min="0" /></div>
+            <div class="form-group"><label>Safety Training (peserta)</label><input type="number" id="f-safety-train" placeholder="cth: 75" min="0" /></div>
+            <div class="form-group"><label>Emergency Drill (kali)</label><input type="number" id="f-drill" placeholder="cth: 2" min="0" /></div>
+            <div class="form-group"><label>Temuan Safety Terbuka</label><input type="number" id="f-temuan-open" value="0" min="0" /></div>
+            <div class="form-group"><label>Temuan Safety Tertutup</label><input type="number" id="f-temuan-closed" value="0" min="0" /></div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" onclick="generateInfografis()">Generate Infografis →</button>
+          <button class="btn-ghost" onclick="resetForm()">Reset Form</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFOGRAFIS -->
+    <section class="section" id="section-infografis">
+      <div id="infografis-content">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>Isi form input terlebih dahulu, lalu klik <strong>Generate Infografis</strong></p>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /container -->
+
+  <script src="js/app.js"></script>
+</body>
+</html>
